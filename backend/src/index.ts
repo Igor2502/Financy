@@ -5,6 +5,7 @@ import express from "express";
 import { buildSchema } from "type-graphql";
 import { AuthResolver } from "./resolvers/auth.resolver";
 import { UserResolver } from "./resolvers/user.resolver";
+import { buildContext } from "./graphql/context";
 
 async function bootstrap() {
   const app = express()
@@ -22,7 +23,7 @@ async function bootstrap() {
 
   await server.start()
 
-  app.use("/graphql", express.json(), expressMiddleware(server))
+  app.use("/graphql", express.json(), expressMiddleware(server, { context: buildContext }))
 
   app.listen(
     { port: 4000 },
