@@ -15,3 +15,19 @@ export class CreateCategoryInput {
   iconColor?: string
 
 }
+
+@InputType()
+export class UpdateCategoryInput {
+  @Field(() => String, { nullable: true })
+  title?: string
+
+  @Field(() => String, { nullable: true })
+  description?: string
+
+  @Field(() => String, { nullable: true })
+  iconName?: string
+
+  @Field(() => String, { nullable: true })
+  iconColor?: string
+
+}
