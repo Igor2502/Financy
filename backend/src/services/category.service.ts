@@ -38,4 +38,18 @@ export class CategoryService {
   async findAllCategories() {
     return prismaClient.category.findMany()
   }
+
+  async deleteCategory(id: string) {
+    if (!id) throw new Error("Id da categoria é obrigatório.")
+
+    const category = await prismaClient.category.findUnique({
+      where: { id: id }
+    })
+
+    if (!category) throw new Error("Categoria não encontrada.")
+
+    return await prismaClient.category.delete({
+      where: { id: id }
+    })
+  }
 }
