@@ -1,4 +1,4 @@
-import { Arg, FieldResolver, Mutation, Resolver, Root, UseMiddleware } from "type-graphql";
+import { Arg, FieldResolver, Mutation, Query, Resolver, Root, UseMiddleware } from "type-graphql";
 import { CategoryModel } from "../models/category.model";
 import { CreateCategoryInput, UpdateCategoryInput } from "../dtos/input/category.input";
 import { CategoryService } from "../services/category.service";
@@ -29,6 +29,11 @@ export class CategoryResolver {
     @Arg("id", () => String) id: string
   ): Promise<CategoryModel> {
     return this.categoryService.updateCategory(id, data)
+  }
+
+  @Query(() => [CategoryModel])
+  async listCategories(): Promise<CategoryModel[]> {
+    return this.categoryService.findAllCategories()
   }
 
   @FieldResolver(() => UserModel)

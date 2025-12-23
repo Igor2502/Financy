@@ -34,4 +34,8 @@ export class CategoryService {
       }
     })
   }
+
+  async findAllCategories() {
+    return prismaClient.category.findMany()
+  }
 }
