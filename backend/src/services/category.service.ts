@@ -39,6 +39,12 @@ export class CategoryService {
     return prismaClient.category.findMany()
   }
 
+  async findCategoryById(id: string) {
+    return prismaClient.category.findUnique({
+      where: { id: id }
+    })
+  }
+
   async deleteCategory(id: string) {
     if (!id) throw new Error("Id da categoria é obrigatório.")
 

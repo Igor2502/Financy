@@ -1,0 +1,41 @@
+import { Arg, FieldResolver, Mutation, Resolver, Root } from "type-graphql";
+import { TransactionModel } from "../models/transaction.model";
+import { TransactionInput } from "../dtos/input/transaction.input";
+import { TransactionService } from "../services/transaction.service";
+import { GqlUser } from "../graphql/decorators/user.decorator";
+import { User } from "@prisma/client";
+import { CategoryModel } from "../models/category.model";
+import { CategoryService } from "../services/category.service";
+import { UserModel } from "../models/user.model";
+import { UserService } from "../services/user.service";
+
+@Resolver(() => TransactionModel)
+export class TransactionResolver {
+
+  private transactionService = new TransactionService();
+  private categoryService = new CategoryService();
+  private userService = new UserService();
+
+  @Mutation(() => TransactionModel)
+  async createTransaction(
+    @Arg("categoryId", () => String) categoryId: string,
+    @Arg("data", () => TransactionInput) data: TransactionInput,
+    @GqlUser() user: User
+  ): Promise<TransactionModel> {
+    return this.transactionService.createTransaction(categoryId, user.id, data);
+  }
+
+  @FieldResolver(() => CategoryModel)
+  async category(
+    @Root() transaction: TransactionModel
+  ): Promise<CategoryModel> {
+    return this.categoryService.findCategoryById(transaction.categoryId);
+  }
+
+  @FieldResolver(() => UserModel)
+  async user(
+    @Root() transaction: TransactionModel
+  ): Promise<UserModel> {
+    return this.userService.findUserById(transaction.userId)
+  }
+}
