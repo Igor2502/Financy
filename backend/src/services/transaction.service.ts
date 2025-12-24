@@ -1,5 +1,5 @@
 import { prismaClient } from "../../prisma/prisma";
-import { TransactionInput } from "../dtos/input/transaction.input";
+import { TransactionInput, UpdateTransactionInput } from "../dtos/input/transaction.input";
 import { TransactionModel } from "../models/transaction.model";
 
 export class TransactionService {
@@ -27,6 +27,25 @@ export class TransactionService {
   async findTransactionsByUserId(userId: string): Promise<TransactionModel[]> {
     return await prismaClient.transaction.findMany({
       where: { userId: userId }
+    })
+  }
+
+  async updateTransaction(id: string, data: UpdateTransactionInput) {
+    if (!id) throw new Error("Id da transação é obrigatório.")
+
+    const transaction = await prismaClient.transaction.findUnique({
+      where: { id: id }
+    })
+
+    if (!transaction) throw new Error("Transação não encontrada.")
+
+    return await prismaClient.transaction.update({
+      where: { id },
+      data: {
+        description: data.description,
+        amount: data.amount,
+        date: data.date
+      }
     })
   }
 }

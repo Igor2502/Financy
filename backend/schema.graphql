@@ -51,6 +51,7 @@ type Mutation {
   login(data: LoginInput!): LoginOutput!
   register(data: RegisterInput!): RegisterOutput!
   updateCategory(data: UpdateCategoryInput!, id: String!): CategoryModel!
+  updateTransaction(data: UpdateTransactionInput!, id: String!): TransactionModel!
 }
 
 type Query {
@@ -95,6 +96,12 @@ input UpdateCategoryInput {
   iconColor: String
   iconName: String
   title: String
+}
+
+input UpdateTransactionInput {
+  amount: Float
+  date: DateTimeISO
+  description: String
 }
 
 type UserModel {

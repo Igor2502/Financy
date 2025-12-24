@@ -1,6 +1,6 @@
 import { Arg, FieldResolver, Mutation, Query, Resolver, Root } from "type-graphql";
 import { TransactionModel } from "../models/transaction.model";
-import { TransactionInput } from "../dtos/input/transaction.input";
+import { TransactionInput, UpdateTransactionInput } from "../dtos/input/transaction.input";
 import { TransactionService } from "../services/transaction.service";
 import { GqlUser } from "../graphql/decorators/user.decorator";
 import { User } from "@prisma/client";
@@ -23,6 +23,14 @@ export class TransactionResolver {
     @GqlUser() user: User
   ): Promise<TransactionModel> {
     return this.transactionService.createTransaction(categoryId, user.id, data);
+  }
+
+  @Mutation(() => TransactionModel)
+  async updateTransaction(
+    @Arg("data", () => UpdateTransactionInput) data: UpdateTransactionInput,
+    @Arg("id", () => String) id: string
+  ): Promise<TransactionModel> {
+    return this.transactionService.updateTransaction(id, data);
   }
 
   @Query(() => [TransactionModel])
