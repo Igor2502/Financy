@@ -1,4 +1,4 @@
-import { Arg, FieldResolver, Mutation, Resolver, Root } from "type-graphql";
+import { Arg, FieldResolver, Mutation, Query, Resolver, Root } from "type-graphql";
 import { TransactionModel } from "../models/transaction.model";
 import { TransactionInput } from "../dtos/input/transaction.input";
 import { TransactionService } from "../services/transaction.service";
@@ -23,6 +23,13 @@ export class TransactionResolver {
     @GqlUser() user: User
   ): Promise<TransactionModel> {
     return this.transactionService.createTransaction(categoryId, user.id, data);
+  }
+
+  @Query(() => [TransactionModel])
+  async listTransactions(
+    @GqlUser() user: User
+  ): Promise<TransactionModel[]> {
+    return this.transactionService.findTransactionsByUserId(user.id);
   }
 
   @FieldResolver(() => CategoryModel)

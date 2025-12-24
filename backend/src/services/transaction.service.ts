@@ -23,4 +23,10 @@ export class TransactionService {
       }
     })
   }
+
+  async findTransactionsByUserId(userId: string): Promise<TransactionModel[]> {
+    return await prismaClient.transaction.findMany({
+      where: { userId: userId }
+    })
+  }
 }
