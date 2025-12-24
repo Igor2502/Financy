@@ -4,7 +4,7 @@
 - ✔️ Deve ser possível criar uma transação
 - ❌ Deve ser possível deletar uma transação
 - ❌ Deve ser possível editar uma transação
-- ❌ Deve ser possível listar todas as transações
+- ✔️ Deve ser possível listar todas as transações
 - ✔️ Deve ser possível criar uma categoria
 - ✔️ Deve ser possível deletar uma categoria
 - ✔️ Deve ser possível editar uma categoria
