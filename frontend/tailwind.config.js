@@ -105,6 +105,10 @@ export default {
 					dark: '#15803D',
 					base: '#16A34A',
 					light: '#E0FAE9'
+				},
+				brand: {
+					dark: '#124B2B',
+					base: '#1F6F43'
 				}
 			},
 			borderRadius: {
