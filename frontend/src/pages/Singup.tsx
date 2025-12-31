@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 import logo from "@/assets/logo.svg";
 
@@ -15,7 +15,9 @@ export function Singup() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  const handleSubmit = () => { }
+  const handleSubmit = async (e: React.FormEvent) => {
+
+  }
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)] items-center justify-center gap-6">
