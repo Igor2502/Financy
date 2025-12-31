@@ -4,14 +4,14 @@ import logo from "@/assets/logo.svg";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { SectionDivisor } from "@/components/SectionDivisor";
 import { Label } from "@/components/ui/label";
-import { UserRoundPlusIcon } from "lucide-react";
+import { LogInIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
-export function Login() {
+export function Singup() {
+  const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
@@ -23,14 +23,25 @@ export function Login() {
       <Card className="w-full max-w-md rounded-xl">
         <CardHeader className="items-center">
           <CardTitle className="text-xl font-bold">
-            Fazer Login
+            Criar conta
           </CardTitle>
           <CardDescription>
-            Entre na sua conta para continuar
+            Comece a controlar suas finanças ainda hoje
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <Label htmlFor="name" className="text-gray-700">Nome completo</Label>
+              <Input
+                id="name"
+                type="text"
+                value={name}
+                placeholder="Seu nome completo"
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
             <div>
               <Label htmlFor="email" className="text-gray-700">E-mail</Label>
               <Input
@@ -52,27 +63,21 @@ export function Login() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+            <span className="text-xs text-gray-500">A senha deve ter no mínimo 8 caracteres</span>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <Checkbox id="remember" />
-                <Label htmlFor="remember" className="ml-2 text-gray-700">Lembrar-me</Label>
-              </div>
-              <a href="#" className="text-sm text-brand-base font-medium hover:underline">Recuperar Senha</a>
-            </div>
-
-            <Button type="submit" className="w-full bg-brand-base">Entrar</Button>
+            <Button type="submit" className="w-full bg-brand-base">Cadastrar</Button>
 
             <SectionDivisor content="ou" />
 
             <div className="flex flex-col justify-center items-center gap-4">
-              <span className="text-gray-600 font-normal text-sm">Ainda não tem uma conta?</span>
+              <span className="text-gray-600 font-normal text-sm">Já tem uma conta?</span>
               <Link
-                to="/singup"
-                className="w-full bg-gray-100 flex justify-center items-center gap-2 py-2 rounded-md text-gray-700 font-medium hover:bg-gray-200 transition-colors border-gray-200 border-2">
-                <UserRoundPlusIcon />
+                to="/login"
+                className="w-full bg-gray-100 flex justify-center items-center gap-2 py-2 rounded-md text-gray-700 font-medium hover:bg-gray-200 transition-colors border-gray-200 border-2"
+              >
+                <LogInIcon />
                 <span>
-                  Criar conta
+                  Fazer login
                 </span>
               </Link>
             </div>
