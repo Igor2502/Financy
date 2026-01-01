@@ -9,14 +9,32 @@ import { SectionDivisor } from "@/components/SectionDivisor";
 import { Label } from "@/components/ui/label";
 import { LogInIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuthStore } from "@/stores/auth";
+import { toast } from "sonner";
 
 export function Singup() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+
+  const signup = useAuthStore((state) => state.signup)
 
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
 
+    try {
+      const signupMutate = await signup({ name, email, password })
+
+      if (signupMutate) {
+        toast.success("Cadastro realizado com sucesso!")
+      }
+    } catch (error) {
+      toast.error("Erro ao realizar cadastro. Tente novamente.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -67,7 +85,7 @@ export function Singup() {
             </div>
             <span className="text-xs text-gray-500">A senha deve ter no mínimo 8 caracteres</span>
 
-            <Button type="submit" className="w-full bg-brand-base">Cadastrar</Button>
+            <Button type="submit" className="w-full bg-brand-base" disabled={loading}>Cadastrar</Button>
 
             <SectionDivisor content="ou" />
 
