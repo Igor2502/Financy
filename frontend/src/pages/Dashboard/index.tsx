@@ -2,7 +2,8 @@ import { Page } from "@/components/Page";
 import { Summary } from "./components/summary";
 import { ListHeader } from "./components/list-header";
 import { TransactionItem } from "./components/transaction-item";
-import { LinkIcon, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
+import { CategoryItem } from "./components/category-item";
 
 const MOCK_TRANSACTIONS = [
   {
@@ -51,17 +52,25 @@ const MOCK_TRANSACTIONS = [
   }
 ]
 
+const MOCK_CATEGORIES = [
+  { id: "1", title: "Alimentação", iconColor: "blue-base", count: 12, amount: 542.30 },
+  { id: "2", title: "Transporte", iconColor: "purple-base", count: 8, amount: 385.50 },
+  { id: "3", title: "Mercado", iconColor: "orange-base", count: 3, amount: 298.75 },
+  { id: "4", title: "Entretenimento", iconColor: "pink-dark", count: 2, amount: 186.20 },
+  { id: "5", title: "Utilidades", iconColor: "yellow-dark", count: 7, amount: 245.80 },
+]
+
 export function Dashboard() {
   return (
     <Page>
       <div className="space-y-6">
-        <div className="grid grid-cols-3 gap-8">
+        <div className="grid grid-cols-3 gap-6">
           <Summary label="SALDO TOTAL" value="R$ 12.847,32" icon={{ name: "WalletIcon", color: "purple-base" }} />
           <Summary label="RECEITAS DO MÊS" value="R$ 4.250,00" icon={{ name: "CircleArrowUpIcon", color: "brand-base" }} />
           <Summary label="DESPESAS DO MÊS" value="R$ 2.180,45" icon={{ name: "CircleArrowDownIcon", color: "red-base" }} />
         </div>
-        <div className="grid grid-cols-3 gap-8">
-          <div className="col-span-2 bg-white py-4 rounded-lg border border-gray-200">
+        <div className="grid grid-cols-3 gap-6 items-start">
+          <div className="col-span-2 bg-white py-4 rounded-lg border border-gray-200 max-h-[600px] overflow-y-auto">
             <ListHeader
               title="TRANSAÇÕES RECENTES"
               linkText="Ver todas"
@@ -91,6 +100,14 @@ export function Dashboard() {
               linkTo="/categories"
               icon="ChevronRightIcon"
             />
+            {
+              MOCK_CATEGORIES.map(category => (
+                <CategoryItem
+                  key={category.id}
+                  item={category}
+                />
+              ))
+            }
           </div>
         </div>
       </div>
