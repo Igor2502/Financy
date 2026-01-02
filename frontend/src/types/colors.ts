@@ -10,7 +10,7 @@ type ColorValues =
   | "green-dark" | "green-base" | "green-light"
   | "brand-base" | "brand-dark";
 
-const colorMap: Record<ColorValues, string> = {
+const textColorMap: Record<ColorValues, string> = {
   "gray-800": "text-gray-800",
   "gray-700": "text-gray-700",
   "gray-600": "text-gray-600",
@@ -46,5 +46,41 @@ const colorMap: Record<ColorValues, string> = {
   "brand-dark": "text-brand-dark",
 };
 
-export { colorMap };
+const bgColorMap: Record<ColorValues, string> = {
+  "gray-800": "bg-gray-800",
+  "gray-700": "bg-gray-700",
+  "gray-600": "bg-gray-600",
+  "gray-500": "bg-gray-500",
+  "gray-400": "bg-gray-400",
+  "gray-300": "bg-gray-300",
+  "gray-200": "bg-gray-200",
+  "gray-100": "bg-gray-100",
+  "danger": "bg-danger",
+  "success": "bg-success",
+  "blue-dark": "bg-blue-dark",
+  "blue-base": "bg-blue-base",
+  "blue-light": "bg-blue-light",
+  "purple-dark": "bg-purple-dark",
+  "purple-base": "bg-purple-base",
+  "purple-light": "bg-purple-light",
+  "pink-dark": "bg-pink-dark",
+  "pink-base": "bg-pink-base",
+  "pink-light": "bg-pink-light",
+  "red-dark": "bg-red-dark",
+  "red-base": "bg-red-base",
+  "red-light": "bg-red-light",
+  "orange-dark": "bg-orange-dark",
+  "orange-base": "bg-orange-base",
+  "orange-light": "bg-orange-light",
+  "yellow-dark": "bg-yellow-dark",
+  "yellow-base": "bg-yellow-base",
+  "yellow-light": "bg-yellow-light",
+  "green-dark": "bg-green-dark",
+  "green-base": "bg-green-base",
+  "green-light": "bg-green-light",
+  "brand-base": "bg-brand-base",
+  "brand-dark": "bg-brand-dark",
+};
+
+export { textColorMap, bgColorMap };
 export type { ColorValues };
