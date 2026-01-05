@@ -21,6 +21,18 @@ export function TransactionItem({ item }: TransactionItemProps) {
   const iconColorClass = textColorMap[item.category.iconColor ?? "gray-500"]
   const iconBgColorClass = bgColorMap[item.category.iconColor ?? "gray-500"]
 
+  const formatDate = (date: string | Date) => {
+    const aux = new Date(date)
+
+    const formatter = Intl.DateTimeFormat("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric"
+    })
+
+    return formatter.format(aux)
+  }
+
   return (
     <div className='grid grid-cols-4 gap-8 border-b p-4 bg-white'>
       <div className='col-span-2 flex items-center gap-4'>
@@ -29,7 +41,7 @@ export function TransactionItem({ item }: TransactionItemProps) {
         </div>
         <div className='flex justify-center flex-col'>
           <span className='font-medium text-gray-800'>{item.description}</span>
-          <span className='text-sm text-gray-600'>{item.date}</span>
+          <span className='text-sm text-gray-600'>{formatDate(item.date)}</span>
         </div>
       </div>
 

@@ -6,6 +6,9 @@ import { PlusIcon } from "lucide-react";
 import { CategoryItem } from "./components/category-item";
 import { CreateTransactionDialog } from "@/components/CreateTransactionDialog";
 import { useState } from "react";
+import { useQuery } from "@apollo/client/react"
+import { LIST_TRANSACTIONS } from "@/lib/graphql/queries/Transaction";
+import { Transaction } from "@/types";
 
 const MOCK_TRANSACTIONS = [
   {
@@ -64,6 +67,9 @@ const MOCK_CATEGORIES = [
 
 export function Dashboard() {
   const [openDialog, setOpenDialog] = useState(false)
+  const { data, loading, refetch } = useQuery<{ listTransactions: Transaction[] }>(LIST_TRANSACTIONS)
+
+  const transactions = data?.listTransactions || []
 
   return (
     <Page>
@@ -82,7 +88,7 @@ export function Dashboard() {
               icon="ChevronRightIcon"
             />
             {
-              MOCK_TRANSACTIONS.map(transaction => (
+              transactions.map(transaction => (
                 <TransactionItem
                   key={transaction.id}
                   item={transaction}
