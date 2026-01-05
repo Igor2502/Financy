@@ -1,0 +1,139 @@
+import React, { useState } from "react"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog"
+import { Input } from "./ui/input"
+import { Label } from "./ui/label"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select"
+import { Button } from "./ui/button"
+import { TransactionTypes, TransactioType } from "./TransactionType"
+import { useMutation } from "@apollo/client/react"
+import { CREATE_TRANSACTION } from "@/lib/graphql/mutations/Transaction"
+import { toast } from "sonner"
+
+interface CreateTransactionDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  onSuccess?: () => void
+}
+
+const MOCK_CATEGORIES = [
+  { id: "1", title: "Alimentação", iconColor: "blue-base", count: 12, amount: 542.30 },
+  { id: "2", title: "Transporte", iconColor: "purple-base", count: 8, amount: 385.50 },
+  { id: "3", title: "Mercado", iconColor: "orange-base", count: 3, amount: 298.75 },
+  { id: "4", title: "Entretenimento", iconColor: "pink-dark", count: 2, amount: 186.20 },
+  { id: "5", title: "Utilidades", iconColor: "yellow-dark", count: 7, amount: 245.80 },
+]
+
+export function CreateTransactionDialog({ open, onOpenChange }: CreateTransactionDialogProps) {
+  const [description, setDescription] = useState("")
+  const [date, setDate] = useState("")
+  const [amount, setAmount] = useState<number>()
+  const [categoryId, setCategoryId] = useState<string>()
+  const [type, setType] = useState<TransactionTypes>(TransactionTypes.Output)
+
+  const [createTransaction, { loading }] = useMutation(CREATE_TRANSACTION, {
+    onCompleted(data, _) {
+      if (data) {
+        toast.success("Transação criada com sucesso")
+        onOpenChange(false)
+      }
+    },
+    onError() {
+      toast.error("Falha ao criar a transação")
+    }
+  })
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    createTransaction({
+      variables: {
+        data: {
+          description: description,
+          amount: type === TransactionTypes.Output
+            ? (amount ?? 0) * -1
+            : (amount ?? 0),
+          date: new Date(date + "T00:00:00Z")
+        },
+        categoryId: categoryId
+      }
+    })
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader className="space-y-1">
+          <DialogTitle className="text-base font-semibold text-gray-800">Nova Transação</DialogTitle>
+          <DialogDescription className="text-sm text-gray-600">
+            Registre sua despesa ou receita
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit}>
+
+          <TransactioType selected={type} onChange={setType} />
+
+          <Label htmlFor="description" className="text-sm text-gray-700 font-medium">Descrição</Label>
+          <Input
+            id="description"
+            placeholder="Ex. Almoço no restaurante"
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            disabled={loading}
+          />
+
+          <div className="flex items-center gap-4 py-4">
+            <div className="flex flex-col w-full">
+              <Label htmlFor="date" className="text-sm text-gray-700 font-medium">Data</Label>
+              <Input
+                id="date"
+                type="date"
+                placeholder="Selecione"
+                value={date}
+                onChange={e => setDate(e.target.value)}
+                disabled={loading}
+              />
+            </div>
+            <div className="flex flex-col w-full">
+              <Label htmlFor="amount" className="text-sm text-gray-700 font-medium">Valor</Label>
+              <Input
+                id="amount"
+                placeholder="RS 0,00"
+                value={amount}
+                onChange={e => setAmount(+e.target.value)}
+                disabled={loading}
+              />
+            </div>
+
+          </div>
+
+          <Label htmlFor="category" className="text-sm text-gray-700 font-medium">Categoria</Label>
+          <Select
+            value={categoryId}
+            onValueChange={e => setCategoryId(e)}
+            disabled={loading}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Selecione" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Categorias</SelectLabel>
+                {
+                  MOCK_CATEGORIES.map(category => (
+                    <SelectItem value={category.id} key={category.id}>{category.title}</SelectItem>
+                  ))
+                }
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+
+          <Button
+            type="submit"
+            className="w-full bg-brand-base mt-4"
+            disabled={loading}
+          >Salvar</Button>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}

@@ -82,5 +82,41 @@ const bgColorMap: Record<ColorValues, string> = {
   "brand-dark": "bg-brand-dark",
 };
 
-export { textColorMap, bgColorMap };
+const borderColorMap: Record<ColorValues, string> = {
+  "gray-800": "border-gray-800",
+  "gray-700": "border-gray-700",
+  "gray-600": "border-gray-600",
+  "gray-500": "border-gray-500",
+  "gray-400": "border-gray-400",
+  "gray-300": "border-gray-300",
+  "gray-200": "border-gray-200",
+  "gray-100": "border-gray-100",
+  "danger": "border-danger",
+  "success": "border-success",
+  "blue-dark": "border-blue-dark",
+  "blue-base": "border-blue-base",
+  "blue-light": "border-blue-light",
+  "purple-dark": "border-purple-dark",
+  "purple-base": "border-purple-base",
+  "purple-light": "border-purple-light",
+  "pink-dark": "border-pink-dark",
+  "pink-base": "border-pink-base",
+  "pink-light": "border-pink-light",
+  "red-dark": "border-red-dark",
+  "red-base": "border-red-base",
+  "red-light": "border-red-light",
+  "orange-dark": "border-orange-dark",
+  "orange-base": "border-orange-base",
+  "orange-light": "border-orange-light",
+  "yellow-dark": "border-yellow-dark",
+  "yellow-base": "border-yellow-base",
+  "yellow-light": "border-yellow-light",
+  "green-dark": "border-green-dark",
+  "green-base": "border-green-base",
+  "green-light": "border-green-light",
+  "brand-base": "border-brand-base",
+  "brand-dark": "border-brand-dark",
+};
+
+export { textColorMap, bgColorMap, borderColorMap };
 export type { ColorValues };

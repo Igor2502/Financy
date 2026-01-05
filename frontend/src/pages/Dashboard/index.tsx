@@ -4,6 +4,8 @@ import { ListHeader } from "./components/list-header";
 import { TransactionItem } from "./components/transaction-item";
 import { PlusIcon } from "lucide-react";
 import { CategoryItem } from "./components/category-item";
+import { CreateTransactionDialog } from "@/components/CreateTransactionDialog";
+import { useState } from "react";
 
 const MOCK_TRANSACTIONS = [
   {
@@ -61,6 +63,8 @@ const MOCK_CATEGORIES = [
 ]
 
 export function Dashboard() {
+  const [openDialog, setOpenDialog] = useState(false)
+
   return (
     <Page>
       <div className="space-y-6">
@@ -86,7 +90,7 @@ export function Dashboard() {
               ))
             }
             <div className="flex justify-center pt-4">
-              <button type="button" className="flex hover:underline">
+              <button type="button" className="flex hover:underline" onClick={() => setOpenDialog(true)}>
                 <PlusIcon className="w-5 h-5 text-brand-base mr-2" />
                 <span className="text-brand-base text-sm font-medium">Nova Transação</span>
               </button>
@@ -111,6 +115,11 @@ export function Dashboard() {
           </div>
         </div>
       </div>
+
+      <CreateTransactionDialog
+        open={openDialog}
+        onOpenChange={setOpenDialog}
+      />
     </Page>
   )
 }
