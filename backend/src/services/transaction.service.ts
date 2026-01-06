@@ -62,4 +62,25 @@ export class TransactionService {
       where: { id: id }
     })
   }
+
+  async countTransactionByUser(categoryId: string, userId: string) {
+    return prismaClient.transaction.count({
+      where: {
+        categoryId: categoryId,
+        userId: userId
+      }
+    })
+  }
+
+  async amount(categoryId: string, userId: string) {
+    return (await prismaClient.transaction.aggregate({
+      _sum: {
+        amount: true
+      },
+      where: {
+        categoryId: categoryId,
+        userId: userId
+      }
+    }))._sum.amount
+  }
 }

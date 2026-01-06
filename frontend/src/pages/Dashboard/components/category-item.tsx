@@ -6,7 +6,7 @@ interface CategoryItemProps {
     id: string
     title: string
     iconColor?: ColorValues
-    count: number
+    countTransactionByUser: number
     amount: number
   }
 }
@@ -25,12 +25,12 @@ export function CategoryItem({ item }: CategoryItemProps) {
 
       <div className='col-span-1 flex items-center justify-end'>
         <span className={`text-sm text-gray-600`}>
-          {item.count} {item.count <= 1 ? 'item' : 'itens'}
+          {item.countTransactionByUser} {item.countTransactionByUser <= 1 ? 'item' : 'itens'}
         </span>
       </div>
 
       <div className='col-span-1 flex items-center justify-end'>
-        <span className={`font-semibold text-sm text-gray-800`}>R$ {item.amount.toFixed(2)}</span>
+        <span className={`font-semibold text-sm text-gray-800`}>R$ {(item?.amount ?? 0).toFixed(2)}</span>
       </div>
     </div>
   )

@@ -4,8 +4,10 @@
 # -----------------------------------------------
 
 type CategoryModel {
+  amount: Float
   author: UserModel
   authorId: String!
+  countTransactionByUser: Float
   createdAt: DateTimeISO!
   description: String!
   iconColor: String

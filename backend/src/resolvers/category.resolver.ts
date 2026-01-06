@@ -1,11 +1,12 @@
-import { Arg, FieldResolver, Mutation, Query, Resolver, Root, UseMiddleware } from "type-graphql";
-import { CategoryModel } from "../models/category.model";
-import { CreateCategoryInput, UpdateCategoryInput } from "../dtos/input/category.input";
-import { CategoryService } from "../services/category.service";
-import { GqlUser } from "../graphql/decorators/user.decorator";
 import { User } from "@prisma/client";
+import { Arg, FieldResolver, Mutation, Query, Resolver, Root, UseMiddleware } from "type-graphql";
+import { CreateCategoryInput, UpdateCategoryInput } from "../dtos/input/category.input";
+import { GqlUser } from "../graphql/decorators/user.decorator";
 import { IsAuth } from "../middlewares/auth.middleware";
+import { CategoryModel } from "../models/category.model";
 import { UserModel } from "../models/user.model";
+import { CategoryService } from "../services/category.service";
+import { TransactionService } from "../services/transaction.service";
 import { UserService } from "../services/user.service";
 
 @Resolver(() => CategoryModel)
@@ -14,6 +15,7 @@ export class CategoryResolver {
 
   private categoryService = new CategoryService()
   private userService = new UserService()
+  private transactionService = new TransactionService()
 
   @Mutation(() => CategoryModel)
   async createCategory(
@@ -49,5 +51,15 @@ export class CategoryResolver {
     @Root() category: CategoryModel,
   ): Promise<UserModel> {
     return this.userService.findUserById(category.authorId)
+  }
+
+  @FieldResolver(() => Number)
+  async countTransactionByUser(@Root() category: CategoryModel): Promise<number> {
+    return this.transactionService.countTransactionByUser(category.id, category.authorId)
+  }
+
+  @FieldResolver(() => Number)
+  async amount(@Root() category: CategoryModel): Promise<number> {
+    return this.transactionService.amount(category.id, category.authorId)
   }
 }

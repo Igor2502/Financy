@@ -1,75 +1,25 @@
+import { useState } from "react";
+import { PlusIcon } from "lucide-react";
+import { useQuery } from "@apollo/client/react"
 import { Page } from "@/components/Page";
 import { Summary } from "./components/summary";
 import { ListHeader } from "./components/list-header";
 import { TransactionItem } from "./components/transaction-item";
-import { PlusIcon } from "lucide-react";
 import { CategoryItem } from "./components/category-item";
 import { CreateTransactionDialog } from "@/components/CreateTransactionDialog";
-import { useState } from "react";
-import { useQuery } from "@apollo/client/react"
-import { LIST_TRANSACTIONS } from "@/lib/graphql/queries/Transaction";
-import { Transaction } from "@/types";
-
-const MOCK_TRANSACTIONS = [
-  {
-    id: "1",
-    description: "Pagamento de Salário",
-    amount: 4250.00,
-    category: {
-      title: "Receita",
-      iconName: "BriefcaseBusinessIcon",
-      iconColor: "green-base",
-    },
-    date: "2025-12-01",
-  },
-  {
-    id: "2",
-    description: "Jantar em Restaurante",
-    amount: -89.50,
-    category: {
-      title: "Alimentação",
-      iconName: "UtensilsIcon",
-      iconColor: "blue-base",
-    },
-    date: "2025-11-30",
-  },
-  {
-    id: "3",
-    description: "Posto de Gasolina",
-    amount: -100,
-    category: {
-      title: "Transporte",
-      iconName: "CarFrontIcon",
-      iconColor: "purple-base",
-    },
-    date: "2025-11-29",
-  },
-  {
-    id: "4",
-    description: "Compras no Mercado",
-    amount: -156.80,
-    category: {
-      title: "Mercado",
-      iconName: "ShoppingCartIcon",
-      iconColor: "orange-base",
-    },
-    date: "2025-11-28",
-  }
-]
-
-const MOCK_CATEGORIES = [
-  { id: "1", title: "Alimentação", iconColor: "blue-base", count: 12, amount: 542.30 },
-  { id: "2", title: "Transporte", iconColor: "purple-base", count: 8, amount: 385.50 },
-  { id: "3", title: "Mercado", iconColor: "orange-base", count: 3, amount: 298.75 },
-  { id: "4", title: "Entretenimento", iconColor: "pink-dark", count: 2, amount: 186.20 },
-  { id: "5", title: "Utilidades", iconColor: "yellow-dark", count: 7, amount: 245.80 },
-]
+import { LIST_TRANSACTIONS_DASHBOARD } from "@/lib/graphql/queries/Transaction";
+import { Category, Transaction } from "@/types";
+import { LIST_CATEGORIES_DASHBOARD } from "@/lib/graphql/queries/Category";
 
 export function Dashboard() {
   const [openDialog, setOpenDialog] = useState(false)
-  const { data, loading, refetch } = useQuery<{ listTransactions: Transaction[] }>(LIST_TRANSACTIONS)
+  const { data: dataTransactions } = useQuery<{ listTransactions: Transaction[] }>(LIST_TRANSACTIONS_DASHBOARD)
+  const { data: dataCategories } = useQuery<{ listCategories: Category[] }>(LIST_CATEGORIES_DASHBOARD)
 
-  const transactions = data?.listTransactions || []
+  const transactions = dataTransactions?.listTransactions || []
+  const categories = dataCategories?.listCategories || []
+
+  console.log(categories)
 
   return (
     <Page>
@@ -111,7 +61,7 @@ export function Dashboard() {
               icon="ChevronRightIcon"
             />
             {
-              MOCK_CATEGORIES.map(category => (
+              categories.map(category => (
                 <CategoryItem
                   key={category.id}
                   item={category}

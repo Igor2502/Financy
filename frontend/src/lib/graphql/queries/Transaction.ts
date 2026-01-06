@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client"
 
-export const LIST_TRANSACTIONS = gql`
+export const LIST_TRANSACTIONS_DASHBOARD = gql`
   query ListTransactions {
     listTransactions {
       id
