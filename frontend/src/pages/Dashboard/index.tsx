@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PlusIcon } from "lucide-react";
 import { useQuery } from "@apollo/client/react"
 import { Page } from "@/components/Page";
@@ -13,21 +13,40 @@ import { LIST_CATEGORIES_DASHBOARD } from "@/lib/graphql/queries/Category";
 
 export function Dashboard() {
   const [openDialog, setOpenDialog] = useState(false)
+  const [balance, setBalance] = useState(0)
+  const [input, setInput] = useState(0)
+  const [output, setOutput] = useState(0)
+
   const { data: dataTransactions } = useQuery<{ listTransactions: Transaction[] }>(LIST_TRANSACTIONS_DASHBOARD)
   const { data: dataCategories } = useQuery<{ listCategories: Category[] }>(LIST_CATEGORIES_DASHBOARD)
 
   const transactions = dataTransactions?.listTransactions || []
   const categories = dataCategories?.listCategories || []
 
-  console.log(categories)
+  useEffect(() => {
+    const totalInput = transactions
+      .filter(transaction => transaction.amount > 0)
+      .reduce((total, transaction) => total += transaction.amount, 0)
+
+    const totalOutput = transactions
+      .filter(transaction => transaction.amount < 0)
+      .reduce((total, transaction) => total += transaction.amount, 0)
+
+    const totalBalance = (totalInput + totalOutput)
+
+    setInput(totalInput)
+    setOutput(totalOutput)
+    setBalance(totalBalance)
+
+  }, [transactions.length])
 
   return (
     <Page>
       <div className="space-y-6">
         <div className="grid grid-cols-3 gap-6">
-          <Summary label="SALDO TOTAL" value="R$ 12.847,32" icon={{ name: "WalletIcon", color: "purple-base" }} />
-          <Summary label="RECEITAS DO MÊS" value="R$ 4.250,00" icon={{ name: "CircleArrowUpIcon", color: "brand-base" }} />
-          <Summary label="DESPESAS DO MÊS" value="R$ 2.180,45" icon={{ name: "CircleArrowDownIcon", color: "red-base" }} />
+          <Summary label="SALDO TOTAL" value={`R$ ${balance}`} icon={{ name: "WalletIcon", color: "purple-base" }} />
+          <Summary label="RECEITAS DO MÊS" value={`R$ ${input}`} icon={{ name: "CircleArrowUpIcon", color: "brand-base" }} />
+          <Summary label="DESPESAS DO MÊS" value={`R$ ${output}`} icon={{ name: "CircleArrowDownIcon", color: "red-base" }} />
         </div>
         <div className="grid grid-cols-3 gap-6 items-start">
           <div className="col-span-2 bg-white py-4 rounded-lg border border-gray-200 max-h-[600px] overflow-y-auto">
