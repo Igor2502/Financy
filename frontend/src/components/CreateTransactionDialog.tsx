@@ -5,11 +5,12 @@ import { Label } from "./ui/label"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select"
 import { Button } from "./ui/button"
 import { TransactionTypes, TransactioType } from "./TransactionType"
-import { useMutation } from "@apollo/client/react"
+import { useMutation, useQuery } from "@apollo/client/react"
 import { CREATE_TRANSACTION } from "@/lib/graphql/mutations/Transaction"
 import { toast } from "sonner"
 import { LIST_TRANSACTIONS_DASHBOARD } from "@/lib/graphql/queries/Transaction"
-import { Transaction } from "@/types"
+import { Category, Transaction } from "@/types"
+import { LIST_CATEGORIES_TITLE } from "@/lib/graphql/queries/Category"
 
 interface CreateTransactionDialogProps {
   open: boolean
@@ -18,20 +19,15 @@ interface CreateTransactionDialogProps {
   transaction?: Transaction
 }
 
-const MOCK_CATEGORIES = [
-  { id: "41d286d5-10a9-47fc-8e18-69ea321f20a0", title: "Alimentação", iconColor: "blue-base", count: 12, amount: 542.30 },
-  { id: "2", title: "Transporte", iconColor: "purple-base", count: 8, amount: 385.50 },
-  { id: "3", title: "Mercado", iconColor: "orange-base", count: 3, amount: 298.75 },
-  { id: "4", title: "Entretenimento", iconColor: "pink-dark", count: 2, amount: 186.20 },
-  { id: "5", title: "Utilidades", iconColor: "yellow-dark", count: 7, amount: 245.80 },
-]
-
 export function CreateTransactionDialog({ open, onOpenChange, transaction }: CreateTransactionDialogProps) {
   const [description, setDescription] = useState("")
   const [date, setDate] = useState("")
   const [amount, setAmount] = useState<number>()
   const [categoryId, setCategoryId] = useState<string>()
   const [type, setType] = useState<TransactionTypes>(TransactionTypes.Output)
+
+  const { data } = useQuery<{ listCategories: Category[] }>(LIST_CATEGORIES_TITLE)
+  const categories = data?.listCategories || []
 
   useEffect(() => {
     if (transaction && open) {
@@ -141,7 +137,7 @@ export function CreateTransactionDialog({ open, onOpenChange, transaction }: Cre
               <SelectGroup>
                 <SelectLabel>Categorias</SelectLabel>
                 {
-                  MOCK_CATEGORIES.map(category => (
+                  categories.map(category => (
                     <SelectItem value={category.id} key={category.id}>{category.title}</SelectItem>
                   ))
                 }
