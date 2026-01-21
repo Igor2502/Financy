@@ -11,6 +11,7 @@ export const LIST_TRANSACTIONS_DASHBOARD = gql`
       category {
         title
         iconColor
+        iconName
       }
     }
   }

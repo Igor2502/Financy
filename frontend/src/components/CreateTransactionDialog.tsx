@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
@@ -8,27 +8,46 @@ import { TransactionTypes, TransactioType } from "./TransactionType"
 import { useMutation } from "@apollo/client/react"
 import { CREATE_TRANSACTION } from "@/lib/graphql/mutations/Transaction"
 import { toast } from "sonner"
+import { LIST_TRANSACTIONS_DASHBOARD } from "@/lib/graphql/queries/Transaction"
+import { Transaction } from "@/types"
 
 interface CreateTransactionDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onSuccess?: () => void
+  transaction?: Transaction
 }
 
 const MOCK_CATEGORIES = [
-  { id: "1", title: "Alimentação", iconColor: "blue-base", count: 12, amount: 542.30 },
+  { id: "41d286d5-10a9-47fc-8e18-69ea321f20a0", title: "Alimentação", iconColor: "blue-base", count: 12, amount: 542.30 },
   { id: "2", title: "Transporte", iconColor: "purple-base", count: 8, amount: 385.50 },
   { id: "3", title: "Mercado", iconColor: "orange-base", count: 3, amount: 298.75 },
   { id: "4", title: "Entretenimento", iconColor: "pink-dark", count: 2, amount: 186.20 },
   { id: "5", title: "Utilidades", iconColor: "yellow-dark", count: 7, amount: 245.80 },
 ]
 
-export function CreateTransactionDialog({ open, onOpenChange }: CreateTransactionDialogProps) {
+export function CreateTransactionDialog({ open, onOpenChange, transaction }: CreateTransactionDialogProps) {
   const [description, setDescription] = useState("")
   const [date, setDate] = useState("")
   const [amount, setAmount] = useState<number>()
   const [categoryId, setCategoryId] = useState<string>()
   const [type, setType] = useState<TransactionTypes>(TransactionTypes.Output)
+
+  useEffect(() => {
+    if (transaction && open) {
+      setDescription(transaction.description)
+      setDate(new Date(transaction.date).toISOString().split("T")[0])
+      setAmount(Math.abs(transaction.amount))
+      setType(transaction.amount < 0 ? TransactionTypes.Output : TransactionTypes.Input)
+      setCategoryId(transaction.categoryId)
+    } else if (!open) {
+      setDescription("")
+      setDate("")
+      setAmount(undefined)
+      setCategoryId(undefined)
+      setType(TransactionTypes.Output)
+    }
+  }, [transaction, open])
 
   const [createTransaction, { loading }] = useMutation(CREATE_TRANSACTION, {
     onCompleted(data, _) {
@@ -39,7 +58,10 @@ export function CreateTransactionDialog({ open, onOpenChange }: CreateTransactio
     },
     onError() {
       toast.error("Falha ao criar a transação")
-    }
+    },
+    refetchQueries: [
+      { query: LIST_TRANSACTIONS_DASHBOARD }
+    ],
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,7 +74,7 @@ export function CreateTransactionDialog({ open, onOpenChange }: CreateTransactio
           amount: type === TransactionTypes.Output
             ? (amount ?? 0) * -1
             : (amount ?? 0),
-          date: new Date(date + "T00:00:00Z")
+          date: new Date(date + "T00:00:00")
         },
         categoryId: categoryId
       }

@@ -20,7 +20,7 @@ export function Dashboard() {
   const { data: dataTransactions } = useQuery<{ listTransactions: Transaction[] }>(LIST_TRANSACTIONS_DASHBOARD)
   const { data: dataCategories } = useQuery<{ listCategories: Category[] }>(LIST_CATEGORIES_DASHBOARD)
 
-  const transactions = dataTransactions?.listTransactions || []
+  const transactions = dataTransactions?.listTransactions?.slice(0, 5) || []
   const categories = dataCategories?.listCategories || []
 
   useEffect(() => {
