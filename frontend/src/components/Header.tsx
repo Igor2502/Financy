@@ -36,8 +36,10 @@ export function Header() {
               >Categorias</Link>
             </div>
 
-            <div className="bg-gray-200 p-2 rounded-3xl w-9 h-9 flex items-center justify-center">
-              <span className="font-medium text-gray-800h">{user?.name?.slice(0, 2)?.toUpperCase()}</span>
+            <div className="bg-gray-200 p-2 rounded-full w-9 h-9 flex items-center justify-center">
+              <Link to="/user">
+                <span className="font-medium text-gray-800">{user?.name?.slice(0, 2)?.toUpperCase()}</span>
+              </Link>
             </div>
           </div>
         </div>
