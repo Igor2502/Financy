@@ -6,17 +6,17 @@ import { Button } from "@/components/ui/button";
 import { SectionDivisor } from "@/components/SectionDivisor";
 import { Label } from "@/components/ui/label";
 import { LogInIcon, LogOutIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/auth";
 
 export function User() {
-  const { user } = useAuthStore()
+  const { user, logout } = useAuthStore()
 
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
+  const navigate = useNavigate()
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleLogout = () => {
+    logout()
+    navigate("/login")
   }
 
   return (
@@ -35,15 +35,13 @@ export function User() {
           <div className="border-b border-b-gray-200 w-full mt-8"></div>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form className="space-y-4">
             <div>
               <Label htmlFor="name" className="text-gray-700">Nome completo</Label>
               <Input
                 id="name"
                 type="text"
                 value={user?.name}
-                placeholder="Seu nome completo"
-                onChange={(e) => setName(e.target.value)}
               />
             </div>
 
@@ -62,11 +60,13 @@ export function User() {
 
             <Button type="submit" className="w-full bg-brand-base">Salvar alterações</Button>
 
-            <Button type="button" className="w-full bg-gray-100 flex justify-center items-center gap-2 py-2 rounded-md text-gray-700 font-medium hover:bg-gray-200 transition-colors border-gray-200 border-2">
+            <Button
+              type="button"
+              className="w-full bg-gray-100 flex justify-center items-center gap-2 py-2 rounded-md text-gray-700 font-medium hover:bg-gray-200 transition-colors border-gray-200 border-2"
+              onClick={handleLogout}
+            >
               <LogOutIcon className="text-danger" />
-              <span>
-                Sair da conta
-              </span>
+              <span>Sair da conta</span>
             </Button>
 
           </form>
