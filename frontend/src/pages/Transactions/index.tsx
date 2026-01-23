@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { PlusIcon } from "lucide-react"
-import { useQuery } from "@apollo/client/react";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { Page } from "@/components/Page";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,11 +13,13 @@ import TransactionDataTable from "./components/TransactionDataTable";
 import { LIST_TRANSACTIONS_DASHBOARD } from "@/lib/graphql/queries/Transaction";
 import { LIST_CATEGORIES_DASHBOARD } from "@/lib/graphql/queries/Category";
 import { DeleteConfirmation } from "@/components/DeleteConfirmation";
+import { DELETE_TRANSACTION } from "@/lib/graphql/mutations/Transaction";
 
 export function Transactions() {
   const [openDialog, setOpenDialog] = useState(false)
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | undefined>()
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [idToDelete, setIdToDelete] = useState<string | null>(null)
 
   const { data: dataTransactions } = useQuery<{ listTransactions: Transaction[] }>(LIST_TRANSACTIONS_DASHBOARD);
   const { data: dataCategories } = useQuery<{ listCategories: Category[] }>(LIST_CATEGORIES_DASHBOARD)
@@ -32,10 +34,21 @@ export function Transactions() {
 
   const handleDelete = async (id: string) => {
     setConfirmDelete(true);
+    setIdToDelete(id);
   };
 
-  const deleteTransaction = (id: string) => {
-    setConfirmDelete(false);
+  const [deleteTransactionMutation] = useMutation(DELETE_TRANSACTION, {
+    onCompleted: () => {
+      setConfirmDelete(false);
+    },
+  })
+
+  const deleteTransaction = async (id: string) => {
+    if (!id) return;
+    await deleteTransactionMutation({
+      variables: { deleteTransactionId: id },
+      refetchQueries: [{ query: LIST_TRANSACTIONS_DASHBOARD }],
+    });
   }
 
   return (
@@ -139,8 +152,8 @@ export function Transactions() {
         title="Remover Transação"
         description="Tem certeza que deseja remover esta transação? Esta ação não poderá ser desfeita."
         onConfirm={() => {
-          if (selectedTransaction) {
-            deleteTransaction(selectedTransaction.id);
+          if (idToDelete) {
+            deleteTransaction(idToDelete);
           }
         }}
       />
