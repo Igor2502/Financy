@@ -1,22 +1,64 @@
-import React, { useState } from "react";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { SectionDivisor } from "@/components/SectionDivisor";
 import { Label } from "@/components/ui/label";
-import { LogInIcon, LogOutIcon } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { UPDATE_USER } from "@/lib/graphql/mutations/User";
 import { useAuthStore } from "@/stores/auth";
+import type { User } from "@/types";
+import { useMutation } from "@apollo/client/react";
+import { LogOutIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export function User() {
   const { user, logout } = useAuthStore()
+  const [name, setName] = useState(user?.name || "")
+
+  useEffect(() => {
+    setName(user?.name || "")
+  }, [user])
+
+  type UpdateUserMudationData = { updateUser: User }
+  type UpdateUserVariables = {
+    id: string
+    data: { name?: string }
+  }
+
+  const [updateUserMutation, { loading }] = useMutation<
+    UpdateUserMudationData,
+    UpdateUserVariables
+  >(UPDATE_USER, {
+    onCompleted: (res: UpdateUserMudationData) => {
+      const updated = res.updateUser
+      if (updated) {
+        toast.success("Perfil atualizado com sucesso!")
+      }
+    },
+    onError: (error) => {
+      toast.error("Erro ao atualizar perfil!")
+      console.error(error)
+    }
+  })
 
   const navigate = useNavigate()
 
   const handleLogout = () => {
     logout()
     navigate("/login")
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!user) return
+
+    await updateUserMutation({
+      variables: {
+        id: user.id,
+        data: { name }
+      }
+    })
   }
 
   return (
@@ -35,13 +77,14 @@ export function User() {
           <div className="border-b border-b-gray-200 w-full mt-8"></div>
         </CardHeader>
         <CardContent>
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Label htmlFor="name" className="text-gray-700">Nome completo</Label>
               <Input
                 id="name"
                 type="text"
-                value={user?.name}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
             </div>
 
@@ -58,7 +101,11 @@ export function User() {
 
             <span className="text-xs text-gray-500">O e-mail não pode ser alterado</span>
 
-            <Button type="submit" className="w-full bg-brand-base">Salvar alterações</Button>
+            <Button
+              type="submit"
+              className="w-full bg-brand-base"
+              disabled={loading}
+            >Salvar alterações</Button>
 
             <Button
               type="button"
