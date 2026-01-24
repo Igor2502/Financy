@@ -85,6 +85,7 @@ export function Transactions() {
                   onChange={(event) =>
                     table.getColumn("description")?.setFilterValue(event.target.value)
                   }
+                  iconName="SearchIcon"
                 />
               </FieldFilter>
               <FieldFilter label="Tipo">

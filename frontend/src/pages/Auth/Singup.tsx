@@ -59,6 +59,7 @@ export function Singup() {
                 value={name}
                 placeholder="Seu nome completo"
                 onChange={(e) => setName(e.target.value)}
+                iconName="UserRoundIcon"
               />
             </div>
 
@@ -70,6 +71,7 @@ export function Singup() {
                 value={email}
                 placeholder="mail@example.com"
                 onChange={(e) => setEmail(e.target.value)}
+                iconName="MailIcon"
               />
             </div>
 
@@ -81,6 +83,7 @@ export function Singup() {
                 value={password}
                 placeholder="Digite sua senha"
                 onChange={(e) => setPassword(e.target.value)}
+                iconName="LockIcon"
               />
             </div>
             <span className="text-xs text-gray-500">A senha deve ter no mínimo 8 caracteres</span>

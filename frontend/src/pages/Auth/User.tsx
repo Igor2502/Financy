@@ -85,6 +85,7 @@ export function User() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                iconName="UserRoundIcon"
               />
             </div>
 
@@ -95,6 +96,7 @@ export function User() {
                 type="email"
                 value={user?.email}
                 placeholder="mail@example.com"
+                iconName="MailIcon"
                 disabled
               />
             </div>

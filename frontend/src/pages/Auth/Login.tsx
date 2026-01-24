@@ -59,6 +59,7 @@ export function Login() {
                 value={email}
                 placeholder="mail@example.com"
                 onChange={(e) => setEmail(e.target.value)}
+                iconName="MailIcon"
               />
             </div>
 
@@ -70,6 +71,7 @@ export function Login() {
                 value={password}
                 placeholder="Digite sua senha"
                 onChange={(e) => setPassword(e.target.value)}
+                iconName="LockIcon"
               />
             </div>
 
