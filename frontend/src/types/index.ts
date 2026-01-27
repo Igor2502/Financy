@@ -27,6 +27,7 @@ export interface Category {
   updatedAt?: string
   authorId: string
   author?: User
+  countTransactionByUser?: number
 }
 
 export interface Transaction {

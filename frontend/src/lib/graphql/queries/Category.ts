@@ -7,6 +7,7 @@ export const LIST_CATEGORIES_DASHBOARD = gql`
     title
     description
     iconColor
+    iconName
     countTransactionByUser
     amount
   }

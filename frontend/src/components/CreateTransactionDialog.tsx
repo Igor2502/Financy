@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Button } from "./ui/button"
 import { TransactionTypes, TransactioType } from "./TransactionType"
 import { useMutation, useQuery } from "@apollo/client/react"
-import { CREATE_TRANSACTION } from "@/lib/graphql/mutations/Transaction"
+import { CREATE_TRANSACTION, UPDATE_TRANSACTION } from "@/lib/graphql/mutations/Transaction"
 import { toast } from "sonner"
 import { LIST_TRANSACTIONS_DASHBOARD } from "@/lib/graphql/queries/Transaction"
 import { Category, Transaction } from "@/types"
@@ -45,7 +45,7 @@ export function CreateTransactionDialog({ open, onOpenChange, transaction }: Cre
     }
   }, [transaction, open])
 
-  const [createTransaction, { loading }] = useMutation(CREATE_TRANSACTION, {
+  const [createTransaction, { loading: loadingCreate }] = useMutation(CREATE_TRANSACTION, {
     onCompleted(data, _) {
       if (data) {
         toast.success("Transação criada com sucesso")
@@ -60,18 +60,45 @@ export function CreateTransactionDialog({ open, onOpenChange, transaction }: Cre
     ],
   })
 
+  const [updateTransaction, { loading: loadingUpdate }] = useMutation(UPDATE_TRANSACTION, {
+    onCompleted(data, _) {
+      if (data) {
+        toast.success("Transação atualizada com sucesso")
+        onOpenChange(false)
+      }
+    },
+    onError() {
+      toast.error("Falha ao atualizar a transação")
+    },
+    refetchQueries: [
+      { query: LIST_TRANSACTIONS_DASHBOARD }
+    ],
+  })
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    const payload = {
+      description,
+      amount: type === TransactionTypes.Output
+        ? (amount ?? 0) * -1
+        : (amount ?? 0),
+      date: new Date(date + "T00:00:00"),
+    }
+
+    if (transaction?.id) {
+      updateTransaction({
+        variables: {
+          updateTransactionId: transaction.id,
+          data: payload
+        }
+      })
+      return
+    }
+
     createTransaction({
       variables: {
-        data: {
-          description: description,
-          amount: type === TransactionTypes.Output
-            ? (amount ?? 0) * -1
-            : (amount ?? 0),
-          date: new Date(date + "T00:00:00")
-        },
+        data: payload,
         categoryId: categoryId
       }
     })
@@ -96,7 +123,7 @@ export function CreateTransactionDialog({ open, onOpenChange, transaction }: Cre
             placeholder="Ex. Almoço no restaurante"
             value={description}
             onChange={e => setDescription(e.target.value)}
-            disabled={loading}
+            disabled={loadingCreate || loadingUpdate}
           />
 
           <div className="flex items-center gap-4 py-4">
@@ -108,7 +135,7 @@ export function CreateTransactionDialog({ open, onOpenChange, transaction }: Cre
                 placeholder="Selecione"
                 value={date}
                 onChange={e => setDate(e.target.value)}
-                disabled={loading}
+                disabled={loadingCreate || loadingUpdate}
               />
             </div>
             <div className="flex flex-col w-full">
@@ -118,7 +145,7 @@ export function CreateTransactionDialog({ open, onOpenChange, transaction }: Cre
                 placeholder="RS 0,00"
                 value={amount}
                 onChange={e => setAmount(+e.target.value)}
-                disabled={loading}
+                disabled={loadingCreate || loadingUpdate}
               />
             </div>
 
@@ -128,7 +155,7 @@ export function CreateTransactionDialog({ open, onOpenChange, transaction }: Cre
           <Select
             value={categoryId}
             onValueChange={e => setCategoryId(e)}
-            disabled={loading}
+            disabled={loadingCreate || loadingUpdate || transaction?.id !== undefined}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Selecione" />
@@ -148,7 +175,7 @@ export function CreateTransactionDialog({ open, onOpenChange, transaction }: Cre
           <Button
             type="submit"
             className="w-full bg-brand-base mt-4"
-            disabled={loading}
+            disabled={loadingCreate || loadingUpdate}
           >Salvar</Button>
         </form>
       </DialogContent>
