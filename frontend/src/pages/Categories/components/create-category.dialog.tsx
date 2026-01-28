@@ -10,6 +10,7 @@ import { ColorValues } from "@/types/colors"
 import { useMutation } from "@apollo/client/react"
 import { CREATE_CATEGORY, UPDATE_CATEGORY } from "@/lib/graphql/mutations/Category"
 import { toast } from "sonner"
+import { LIST_CATEGORIES_DASHBOARD } from "@/lib/graphql/queries/Category"
 
 interface CreateCategoryDialogProps {
   open: boolean
@@ -59,7 +60,8 @@ export function CreateCategoryDialog({ open, onOpenChange, category }: CreateCat
     },
     onError() {
       toast.error("Falha ao criar a categoria")
-    }
+    },
+    refetchQueries: [{ query: LIST_CATEGORIES_DASHBOARD }],
   })
 
   const [updateCategory, { loading: loadingUpdate }] = useMutation(UPDATE_CATEGORY, {
@@ -71,7 +73,8 @@ export function CreateCategoryDialog({ open, onOpenChange, category }: CreateCat
     },
     onError() {
       toast.error("Falha ao atualizar a categoria")
-    }
+    },
+    refetchQueries: [{ query: LIST_CATEGORIES_DASHBOARD }],
   })
 
   const handleSubmit = (e: React.FormEvent) => {
