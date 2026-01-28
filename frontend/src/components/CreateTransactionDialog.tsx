@@ -10,7 +10,7 @@ import { CREATE_TRANSACTION, UPDATE_TRANSACTION } from "@/lib/graphql/mutations/
 import { toast } from "sonner"
 import { LIST_TRANSACTIONS_DASHBOARD } from "@/lib/graphql/queries/Transaction"
 import { Category, Transaction } from "@/types"
-import { LIST_CATEGORIES_TITLE } from "@/lib/graphql/queries/Category"
+import { LIST_CATEGORIES_DASHBOARD, LIST_CATEGORIES_TITLE } from "@/lib/graphql/queries/Category"
 
 interface CreateTransactionDialogProps {
   open: boolean
@@ -56,7 +56,8 @@ export function CreateTransactionDialog({ open, onOpenChange, transaction }: Cre
       toast.error("Falha ao criar a transação")
     },
     refetchQueries: [
-      { query: LIST_TRANSACTIONS_DASHBOARD }
+      { query: LIST_TRANSACTIONS_DASHBOARD },
+      { query: LIST_CATEGORIES_DASHBOARD }
     ],
   })
 
@@ -71,7 +72,8 @@ export function CreateTransactionDialog({ open, onOpenChange, transaction }: Cre
       toast.error("Falha ao atualizar a transação")
     },
     refetchQueries: [
-      { query: LIST_TRANSACTIONS_DASHBOARD }
+      { query: LIST_TRANSACTIONS_DASHBOARD },
+      { query: LIST_CATEGORIES_DASHBOARD }
     ],
   })
 
@@ -142,6 +144,8 @@ export function CreateTransactionDialog({ open, onOpenChange, transaction }: Cre
               <Label htmlFor="amount" className="text-sm text-gray-700 font-medium">Valor</Label>
               <Input
                 id="amount"
+                type="number"
+                step="0.01"
                 placeholder="RS 0,00"
                 value={amount}
                 onChange={e => setAmount(+e.target.value)}
