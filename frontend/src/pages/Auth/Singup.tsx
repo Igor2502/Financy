@@ -25,6 +25,18 @@ export function Singup() {
     setLoading(true)
 
     try {
+      if (!name || !email || !password) {
+        toast.error("Por favor, preencha todos os campos.")
+        setLoading(false)
+        return
+      }
+
+      if (password.length < 8) {
+        toast.error("A senha deve ter no mínimo 8 caracteres.")
+        setLoading(false)
+        return
+      }
+
       const signupMutate = await signup({ name, email, password })
 
       if (signupMutate) {
