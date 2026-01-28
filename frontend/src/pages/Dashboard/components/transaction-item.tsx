@@ -33,6 +33,15 @@ export function TransactionItem({ item }: TransactionItemProps) {
     return formatter.format(aux)
   }
 
+  const formatCurrency = (amount: number) => {
+    const formatter = Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL"
+    })
+
+    return formatter.format(amount)
+  }
+
   return (
     <div className='grid grid-cols-4 gap-8 border-b p-4 bg-white'>
       <div className='col-span-2 flex items-center gap-4'>
@@ -53,7 +62,7 @@ export function TransactionItem({ item }: TransactionItemProps) {
 
       <div className='col-span-1 flex items-center justify-end'>
         <span className={`font-semibold text-sm`}>
-          {item.amount >= 0 ? `+ R$ ${item.amount.toFixed(2)}` : `- R$ ${Math.abs(item.amount).toFixed(2)}`}
+          {formatCurrency(item.amount)}
         </span>
         {
           item.amount >= 0 ? (

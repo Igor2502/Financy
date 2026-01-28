@@ -15,6 +15,15 @@ export function CategoryItem({ item }: CategoryItemProps) {
   const iconColorClass = textColorMap[item.iconColor ?? "gray-500"]
   const iconBgColorClass = bgColorMap[item.iconColor ?? "gray-500"]
 
+  const formatCurrency = (amount: number) => {
+    const formatter = Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL"
+    })
+
+    return formatter.format(amount)
+  }
+
   return (
     <div className='grid grid-cols-4 gap-4 px-4 mt-4 bg-white'>
       <div className='col-span-2 flex items-center justify-start gap-4'>
@@ -30,7 +39,7 @@ export function CategoryItem({ item }: CategoryItemProps) {
       </div>
 
       <div className='col-span-1 flex items-center justify-end'>
-        <span className={`font-semibold text-sm text-gray-800`}>R$ {(item?.amount ?? 0).toFixed(2)}</span>
+        <span className={`font-semibold text-sm text-gray-800`}>{formatCurrency(item.amount)}</span>
       </div>
     </div>
   )
