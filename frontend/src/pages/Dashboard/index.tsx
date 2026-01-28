@@ -38,15 +38,15 @@ export function Dashboard() {
     setOutput(totalOutput)
     setBalance(totalBalance)
 
-  }, [transactions.length])
+  }, [dataTransactions?.listTransactions?.length])
 
   return (
     <Page>
       <div className="space-y-6">
         <div className="grid grid-cols-3 gap-6">
-          <Summary label="SALDO TOTAL" value={`R$ ${balance}`} icon={{ name: "WalletIcon", color: "purple-base" }} />
-          <Summary label="RECEITAS DO MÊS" value={`R$ ${input}`} icon={{ name: "CircleArrowUpIcon", color: "brand-base" }} />
-          <Summary label="DESPESAS DO MÊS" value={`R$ ${output}`} icon={{ name: "CircleArrowDownIcon", color: "red-base" }} />
+          <Summary label="SALDO TOTAL" value={balance} icon={{ name: "WalletIcon", color: "purple-base" }} />
+          <Summary label="RECEITAS DO MÊS" value={input} icon={{ name: "CircleArrowUpIcon", color: "brand-base" }} />
+          <Summary label="DESPESAS DO MÊS" value={output} icon={{ name: "CircleArrowDownIcon", color: "red-base" }} />
         </div>
         <div className="grid grid-cols-3 gap-6 items-start">
           <div className="col-span-2 bg-white py-4 rounded-lg border border-gray-200 max-h-[600px] overflow-y-auto">
